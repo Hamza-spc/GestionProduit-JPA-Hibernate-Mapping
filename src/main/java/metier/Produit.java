@@ -1,6 +1,7 @@
 package metier;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,13 +16,11 @@ public class Produit {
     private double prix;
     private int quantite;
 
-    // 🔗 Relation avec Catalogue
     @ManyToOne
     private CatalogueProduit catalogue;
 
-    // 🔗 Relation avec Magasin
     @ManyToMany(mappedBy = "produits")
-    private List<Magasin> magasins;
+    private List<Magasin> magasins = new ArrayList<>(); // ✅ IMPORTANT
 
     public Produit() {}
 

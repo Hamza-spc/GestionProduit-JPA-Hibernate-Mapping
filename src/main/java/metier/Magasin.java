@@ -1,6 +1,7 @@
 package metier;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,12 +14,18 @@ public class Magasin {
     private String lieu;
 
     @ManyToMany
-    private List<Produit> produits;
+    @JoinTable(
+            name = "Magasin_Produit",
+            joinColumns = @JoinColumn(name = "magasin_id"),
+            inverseJoinColumns = @JoinColumn(name = "produit_id")
+    )
+    private List<Produit> produits = new ArrayList<>(); // ✅ IMPORTANT
 
     public Magasin() {}
 
     public Magasin(String lieu) {
         this.lieu = lieu;
+        this.produits = new ArrayList<>(); // ✅ sécurité
     }
 
     public Long getIdm() { return idm; }

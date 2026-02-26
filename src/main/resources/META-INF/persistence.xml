@@ -8,6 +8,10 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <class>metier.Produit</class>
+        <class>metier.CatalogueProduit</class>
+        <class>metier.Magasin</class>
+        <class>metier.ProduitFrais</class>
+        <class>metier.ProduitStandard</class>
 
         <properties>
 

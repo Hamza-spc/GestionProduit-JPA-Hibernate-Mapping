@@ -1,6 +1,7 @@
 package metier;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,7 +14,7 @@ public class CatalogueProduit {
     private String categorie;
 
     @OneToMany(mappedBy = "catalogue")
-    private List<Produit> produits;
+    private List<Produit> produits = new ArrayList<>(); // ✅ une seule fois
 
     public CatalogueProduit() {}
 

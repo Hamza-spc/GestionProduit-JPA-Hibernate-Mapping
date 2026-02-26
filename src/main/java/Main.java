@@ -1,42 +1,48 @@
-import dao.ImplProduit;
-import metier.Produit;
+import jakarta.persistence.*;
+import metier.*;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Date;
 
 public class Main {
-
     public static void main(String[] args) {
 
-        ImplProduit dao = new ImplProduit();
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("GestionProduits");
+        EntityManager em = emf.createEntityManager();
 
-        // ➕ Ajouter
-        Produit p1 = new Produit("Laptop", 9000, 5);
-        dao.add(p1);
+        em.getTransaction().begin();
 
-        Produit p2 = new Produit("Mouse", 200, 20);
-        dao.add(p2);
+        // 1) Créer un catalogue
+        CatalogueProduit cat = new CatalogueProduit("Informatique");
+        em.persist(cat);
 
-        System.out.println("Produits ajoutés");
+        // 2) Créer des produits (héritage)
+        ProduitStandard ps = new ProduitStandard("Clavier", 250, 10);
+        ps.setCatalogue(cat);
 
-        // 🔍 Lire
-        Produit produit = dao.getProduit(1L);
-        System.out.println("Produit ID 1 : " + produit.getDesignation());
 
-        // ✏️ Modifier
-        Produit newData = new Produit("Laptop Gaming", 12000, 3);
-        dao.modifyProduit(newData, 1L);
-        System.out.println("Produit modifié");
+        ProduitFrais pf = new ProduitFrais(
+                "Lait",
+                12.0,
+                30,
+                new Date()
+        );        pf.setCatalogue(cat);
 
-        // 📋 Afficher tous
-        List<Produit> produits = dao.afficherListProduits();
-        System.out.println("Liste des produits :");
-        for (Produit p : produits) {
-            System.out.println(p.getId() + " | " + p.getDesignation() +
-                    " | " + p.getPrix() + " | " + p.getQuantite());
-        }
+        em.persist(ps);
+        em.persist(pf);
 
-        // ❌ Supprimer
-        dao.supprimer(p2);
-        System.out.println("Produit supprimé");
+        // 3) Créer un magasin + associer produits
+        Magasin m1 = new Magasin("Casablanca");
+        m1.getProduits().add(ps);
+        m1.getProduits().add(pf);
+
+        em.persist(m1);
+
+        em.getTransaction().commit();
+
+        em.close();
+        emf.close();
+
+        System.out.println("Catalogue + Produits + Magasin insérés !");
     }
 }
